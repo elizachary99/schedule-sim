@@ -1,0 +1,7 @@
+{
+    "tasks": [
+        {"phase": 0, "period": 10, "cost": 5, "deadline": 10},
+        {"phase": 0, "period": 15, "cost": 4, "deadline": 20},
+        {"phase": 0, "period": 30, "cost": 10, "deadline": 30}
+    ]
+}
