@@ -111,13 +111,13 @@ class Simulator:
                 raise Exception("A PEDF task was not assigned to a processor!")
 
         while self.time <= self.max_time:
-            self.np_time = False
+            self.np_decision = False
 
             for i in range(self.num_procs):
                 if self.active_jobs[i] is not None:
                     # remove jobs which have finished executing from active jobs array
                     if self.active_jobs[i].exec_time == 0:
-                        self.np_time = True
+                        self.np_decision = True
                         if self.context_switch_cost > 0:
                             if type(self.active_jobs[i]) is ContextSwitch:
                                 self.active_jobs[i] = self.active_jobs[i].link
@@ -129,7 +129,7 @@ class Simulator:
                         if prin > 0: print("Missed deadline at", self.time + self.active_jobs[i].deadline_time)
                         return False
                 else: # processor is open for new job
-                    self.np_time = True
+                    self.np_decision = True
                 
             # check if queued job has missed deadline
             for job in self.queued_jobs:
@@ -192,7 +192,7 @@ class Simulator:
 
                 if len(new_jobs) > 0:
                     raise Exception("new_jobs still has jobs!")
-            elif self.np_time: # assign jobs only if at least one processor is available
+            elif self.np_decision: # assign jobs only if at least one processor is available
                 self.queued_jobs.sort(key=key) # always EDF
                 if len(self.queued_jobs) > 0:
                     for i in range(len(self.active_jobs)):
@@ -224,7 +224,7 @@ class Simulator:
 
             interval = max(1, interval)
             self.time += interval
-            if prin > 2: input()
+            if prin > 2: input() # pause between decision points
 
         if prin > 0: print("The task set is schedulable!")
         return True
